@@ -1,13 +1,13 @@
-import { Client, GatewayIntentBits } from 'discord.js';
-import { REST, Routes } from 'discord.js';
+import { Client, GatewayIntentBits, REST, Routes } from 'discord.js';
+import { Bot } from '../protocols/bot';
 import { Command } from '../protocols/commands';
 import { useCommands } from './commands';
 
-class Bot {
+export class ClientBot implements Bot {
   private commands: Map<string, Command>;
-  constructor(readonly client: Client, private readonly rest: REST) {}
+  constructor(readonly client: Client, private readonly rest: REST) { }
 
-  async init() {
+  async start(token: string) {
     try {
       this.commands = await useCommands();
 
@@ -31,15 +31,16 @@ class Bot {
       if (!cmd) return;
       cmd.handle(interaction);
     });
+
+    this.client.login(token);
   }
 
-  async login(token: string) {
-    await this.init();
-    this.client.login(token);
+  public getClient(): Client {
+    return this.client;
   }
 }
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN || '');
 
-export const bot = new Bot(client, rest);
+export const clientBot = new ClientBot(client, rest);
