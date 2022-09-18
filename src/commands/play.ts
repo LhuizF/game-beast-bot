@@ -27,6 +27,12 @@ class Play implements Command {
       return;
     }
 
+    const guildMember = interaction.guild?.members.cache.get(interaction.user.id);
+    const role = interaction.guild?.roles.cache.filter((r) => r.name == 'Player');
+
+    if (!role || !guildMember) return;
+    await guildMember.roles.add(role);
+
     const embed = new EmbedBuilder({
       title: `${user.name} começou a jogar!`
     })

@@ -6,7 +6,7 @@ import { local } from '../services/api';
 import { GuildModel } from '../types/api';
 
 export class BotDecorator implements Bot {
-  constructor(private readonly clientBot: ClientBot) { }
+  constructor(private readonly clientBot: ClientBot) {}
 
   async start(token: string): Promise<void> {
     await this.clientBot.start(token);
@@ -22,18 +22,13 @@ export class BotDecorator implements Bot {
           icon: guild.iconURL(),
           channel: channel.id
         })
-        .then((res) => {
-          console.log(res.data);
-          return res.data;
-        })
+        .then((res) => res.data)
         .catch((err) => {
           console.log(err);
           return null;
         });
 
-      if (!guildInDb) return;
-
-      console.log(guildInDb);
+      // if (!guildInDb) return;
 
       // channel.send({embeds: })
     });
