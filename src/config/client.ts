@@ -5,7 +5,7 @@ import { useCommands } from './commands';
 
 export class ClientBot implements Bot {
   private commands: Map<string, Command>;
-  constructor(readonly client: Client, private readonly rest: REST) { }
+  constructor(readonly client: Client, private readonly rest: REST) {}
 
   async start(token: string) {
     try {
