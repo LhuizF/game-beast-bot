@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, REST, Routes } from 'discord.js';
-import { Bot } from '../protocols/bot';
-import { Command } from '../protocols/commands';
+import { Bot } from '../types/protocols/bot';
+import { Command } from '../types/protocols/commands';
 import { useCommands } from './commands';
 
 export class ClientBot implements Bot {
