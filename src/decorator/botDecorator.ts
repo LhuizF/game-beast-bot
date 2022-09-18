@@ -1,8 +1,9 @@
 import { Guild } from 'discord.js';
 import { ClientBot } from '../config/client';
-import { Bot } from '../protocols/bot';
-import { createChannel } from '../service/createChannel';
+import { Bot } from '../types/protocols/bot';
+import { createChannel } from '../utils';
 import { local } from '../services/api';
+import { GuildModel } from '../types/api';
 
 export class BotDecorator implements Bot {
   constructor(private readonly clientBot: ClientBot) { }
@@ -12,17 +13,29 @@ export class BotDecorator implements Bot {
     const client = this.clientBot.getClient();
 
     client.on('guildCreate', async (guild: Guild) => {
-      const channelID = await createChannel(guild, client.user?.id || '');
+      const channel = await createChannel(guild, client.user?.id || '');
 
-      await local
-        .post('/create-guild', {
-          id: Number(guild.id),
+      const guildInDb = await local
+        .post<GuildModel>('/create-guild', {
+          id: guild.id,
           name: guild.name,
-          icon: guild.icon,
-          channel: channelID
+          icon: guild.iconURL(),
+          channel: channel.id
         })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err.data));
+        .then((res) => {
+          console.log(res.data);
+          return res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+          return null;
+        });
+
+      if (!guildInDb) return;
+
+      console.log(guildInDb);
+
+      // channel.send({embeds: })
     });
   }
 }
