@@ -40,7 +40,7 @@ class Play implements Command {
       .setThumbnail(user.avatar)
       .addFields({ name: 'Pontos iniciais', value: user.points.toString(), inline: true })
       .setTimestamp()
-      .setFooter({ text: 'Ainda em teste' });
+      .setFooter({ text: 'Game beast' });
 
     await interaction.reply({ embeds: [embed] });
   }

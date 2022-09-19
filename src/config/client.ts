@@ -5,7 +5,13 @@ import { useCommands } from './commands';
 
 export class ClientBot implements Bot {
   private commands: Map<string, Command>;
-  constructor(readonly client: Client, private readonly rest: REST) {}
+  private readonly rest: REST;
+  private readonly client: Client;
+
+  constructor(readonly token: string, readonly clientID: string) {
+    this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    this.rest = new REST({ version: '10' }).setToken(token);
+  }
 
   async start(token: string) {
     try {
@@ -13,7 +19,7 @@ export class ClientBot implements Bot {
 
       const commands = Array.from(this.commands.values());
 
-      await this.rest.put(Routes.applicationCommands(process.env.CLIENT_ID || ''), {
+      await this.rest.put(Routes.applicationCommands(this.clientID), {
         body: commands
       });
     } catch (error) {
@@ -39,8 +45,3 @@ export class ClientBot implements Bot {
     return this.client;
   }
 }
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN || '');
-
-export const clientBot = new ClientBot(client, rest);

@@ -1,7 +1,12 @@
 import 'dotenv/config';
-import { clientBot } from './config/client';
+import { ClientBot } from './config/client';
 import { BotDecorator } from './decorator/botDecorator';
+
+const token = process.env.DISCORD_TOKEN || '';
+const clientID = process.env.CLIENT_ID || '';
+
+const clientBot = new ClientBot(token, clientID);
 
 const bot = new BotDecorator(clientBot);
 
-bot.start(process.env.DISCORD_TOKEN || '');
+bot.start();

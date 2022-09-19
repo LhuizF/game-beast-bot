@@ -14,10 +14,3 @@ export const useCommands = async () => {
 
   return new Map<string, Command>(commands);
 };
-
-// (async () => {
-//   const a = await useCommands();
-//   console.log(a);
-//   const b = Array.from(a.values());
-//   console.log(b);
-// })();
