@@ -17,3 +17,14 @@ export interface UserModel {
   avatar: string;
   created_at: Date;
 }
+
+export interface BetModel {
+  id: number;
+  id_game: number;
+  id_user: string;
+  beast: string;
+  points: number;
+  status: string;
+  platform: string;
+  created_at: Date;
+}
