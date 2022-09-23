@@ -26,11 +26,13 @@ class ToBet implements Command {
   async handle(interaction: Interaction): Promise<void> {
     const [points, beast] = interaction.options.data;
 
-    const guildID = interaction.guildId;
+    const id_guild = interaction.guildId;
     const user = interaction.user;
 
     const bet = await local
-      .post<BetModel>(`/bet/${guildID}/${user.id}`, {
+      .post<BetModel>(`/bet`, {
+        id_guild,
+        id_discord: user.id,
         id_beast: beast.value,
         points: points.value,
         platform: 'discord'
