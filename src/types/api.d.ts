@@ -18,6 +18,12 @@ export interface UserModel {
   created_at: Date;
 }
 
+export interface BeastModel {
+  id: number;
+  name: string;
+  times_win: number;
+}
+
 export interface BetModel {
   id: number;
   id_game: number;
@@ -27,4 +33,33 @@ export interface BetModel {
   status: string;
   platform: string;
   created_at: Date;
+}
+
+export interface GameModel {
+  id: number;
+  time: number;
+  result: number;
+  created_at: Date;
+  update_at: Date;
+}
+
+export interface GameResult extends BetsResult {
+  id_game: number;
+  beastWin: BeastModel | null;
+  create_at: Date;
+  date: Date;
+}
+
+export interface BetsResult {
+  totalBets: number;
+  winners: UserWin[];
+  losers: number;
+}
+
+export interface UserWin {
+  id: string;
+  name: string;
+  avatar: string;
+  pointsBet: number;
+  pointsReceived: number;
 }
