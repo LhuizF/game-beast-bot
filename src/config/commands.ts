@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Command } from '../types/protocols/commands';
+import { Command } from '../types/protocols/command';
 
 export const useCommands = async () => {
   const commands: Array<[string, Command]> = await Promise.all(

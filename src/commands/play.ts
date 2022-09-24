@@ -1,7 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { local } from '../services/api';
 import { UserModel } from '../types/api';
-import { Command, Interaction } from '../types/protocols/commands';
+import { Command, Interaction } from '../types/protocols/command';
 
 class Play implements Command {
   readonly name = 'jogar';

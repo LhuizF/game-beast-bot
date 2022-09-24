@@ -1,7 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { local } from '../services/api';
 import { GameResult } from '../types/api';
-import { Command, Interaction } from '../types/protocols/commands';
+import { Command, Interaction } from '../types/protocols/command';
 
 class LestBetsUser implements Command {
   readonly name = 'minhas apostas';

@@ -1,4 +1,4 @@
-import { Command, Interaction } from '../types/protocols/commands';
+import { Command, Interaction } from '../types/protocols/command';
 
 class Ping implements Command {
   name = 'ping';
