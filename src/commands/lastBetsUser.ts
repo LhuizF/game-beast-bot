@@ -1,15 +1,16 @@
 import { EmbedBuilder } from 'discord.js';
 import { local } from '../services/api';
-import { GameResult } from '../types/api';
+import { BetModel } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
+import { getBeastName, getStatus, makeFieldInline } from '../utils';
 
 class LestBetsUser implements Command {
-  readonly name = 'minhas apostas';
-  readonly description = 'Mostra o resultado dos últimos 3 jogos';
+  readonly name = 'minhasapostas';
+  readonly description = 'Mostra suas últimas apostas';
   readonly options = [
     {
       name: 'max',
-      description: 'Quantidade máxima de resultados dos últimos (max 8)',
+      description: 'Quantidade máxima de apostas dos últimos (max 5)',
       type: 4
     }
   ];
@@ -18,45 +19,38 @@ class LestBetsUser implements Command {
     const [maxOption] = interaction.options.data;
 
     const max: string = (() => {
-      if (!maxOption?.value) return '3';
-      if (maxOption.value > 10 || maxOption.value <= 0) return '3';
+      if (!maxOption?.value || maxOption.value > 10 || maxOption.value <= 0) return '3';
       return maxOption.value.toString();
     })();
 
-    const games = await local
-      .get<GameResult[]>(`/last-games?max=${max}`)
+    const id_guild = interaction.guildId;
+    const user = interaction.user;
+
+    const userBets = await local
+      .get<BetModel[]>(`/user/${id_guild}/${user.id}/bets?max=${max}`)
       .then((res) => res.data)
       .catch((err) => {
         console.log(err);
         return null;
       });
 
-    if (!games) return;
+    if (!userBets) return;
 
     const headEmbed = new EmbedBuilder()
-      .setTitle(`Últimos ${games.length} resultados`)
+      .setTitle(`Últimos ${userBets.length} apostas de ${user.username}`)
       .setColor([245, 73, 53])
       .setFooter({ text: 'Game beast' });
 
-    const makeFieldInline = (name: string, value?: string | number, inline = true) => ({
-      name,
-      value: value?.toString() || '',
-      inline
-    });
-
-    const embed = games.map((game) => {
-      const totalPoints = game.winners.reduce((acc, win) => acc + win.pointsReceived, 0);
-
+    const embed = userBets.map((bet) => {
       return new EmbedBuilder()
-        .setTitle(`Game número ${game.id_game}`)
+        .setTitle(`Game número ${bet.id_game}`)
         .setColor([245, 73, 53])
         .addFields(
-          makeFieldInline('Resultado', game.beastWin?.name, false),
-          makeFieldInline('Total de apostas', game.totalBets.toString()),
-          makeFieldInline('Total de ganhadores', game.winners.length.toString()),
-          makeFieldInline('Total pontos ganhos', totalPoints)
+          makeFieldInline('Você apostou no', getBeastName(bet.id_beast)),
+          makeFieldInline('Pontos', bet.points),
+          makeFieldInline('Status', getStatus(bet.status))
         )
-        .setTimestamp(new Date(game.date));
+        .setTimestamp(new Date(bet.created_at));
     });
 
     await interaction.reply({ embeds: [headEmbed, ...embed] });

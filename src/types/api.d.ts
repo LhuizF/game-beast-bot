@@ -26,13 +26,22 @@ export interface BeastModel {
 
 export interface BetModel {
   id: number;
+  points: number;
   id_game: number;
+  status: Status;
+  platform: string;
+  id_beast: number;
+  id_user: string;
+  created_at: Date;
+}
+
+export interface NewBet {
+  id: number;
   id_user: string;
   beast: string;
-  points: number;
+  id_game: number;
   status: string;
-  platform: string;
-  created_at: Date;
+  points: number;
 }
 
 export interface GameModel {
@@ -63,3 +72,5 @@ export interface UserWin {
   pointsBet: number;
   pointsReceived: number;
 }
+
+type Status = 'pending' | 'win' | 'lose';

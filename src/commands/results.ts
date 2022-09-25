@@ -2,6 +2,7 @@ import { EmbedBuilder } from 'discord.js';
 import { local } from '../services/api';
 import { GameResult } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
+import { makeFieldInline } from '../utils';
 
 class Results implements Command {
   readonly name = 'resultados';
@@ -38,12 +39,6 @@ class Results implements Command {
       .setColor([245, 73, 53])
       .setFooter({ text: 'Game beast' });
 
-    const makeFieldInline = (name: string, value?: string | number, inline = true) => ({
-      name,
-      value: value?.toString() || '',
-      inline
-    });
-
     const embed = games.map((game) => {
       const totalPoints = game.winners.reduce((acc, win) => acc + win.pointsReceived, 0);
 
@@ -51,7 +46,7 @@ class Results implements Command {
         .setTitle(`Game número ${game.id_game}`)
         .setColor([245, 73, 53])
         .addFields(
-          makeFieldInline('Resultado', game.beastWin?.name, false),
+          makeFieldInline('Resultado', game.beastWin?.name || '', false),
           makeFieldInline('Total de apostas', game.totalBets.toString()),
           makeFieldInline('Total de ganhadores', game.winners.length.toString()),
           makeFieldInline('Total pontos ganhos', totalPoints)

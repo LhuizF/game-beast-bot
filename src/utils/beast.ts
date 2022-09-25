@@ -32,3 +32,7 @@ export const getBeastOptions = () => {
     value: beast.id
   }));
 };
+
+export const getBeastName = (id: number) => {
+  return beasts.find((best) => best.id === id)?.name || '';
+};

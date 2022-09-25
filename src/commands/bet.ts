@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { local } from '../services/api';
-import { BetModel } from '../types/api';
+import { NewBet } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastOptions } from '../utils';
 
@@ -30,7 +30,7 @@ class ToBet implements Command {
     const user = interaction.user;
 
     const bet = await local
-      .post<BetModel>(`/bet`, {
+      .post<NewBet>(`/bet`, {
         id_guild,
         id_discord: user.id,
         id_beast: beast.value,
@@ -42,7 +42,7 @@ class ToBet implements Command {
         console.log(err);
         return null;
       });
-
+    // tratar erros aqui
     if (!bet) return;
 
     const embed = new EmbedBuilder()
