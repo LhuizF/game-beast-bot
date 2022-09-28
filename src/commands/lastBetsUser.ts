@@ -27,7 +27,7 @@ class LestBetsUser implements Command {
     const user = interaction.user;
 
     const userBets = await local
-      .get<BetModel[]>(`/user/${id_guild}/${user.id}/bets?max=${max}`)
+      .get<BetModel[]>(`/guild/${id_guild}/user/${user.id}/bets?max=${max}`)
       .then((res) => res.data)
       .catch((err) => {
         console.log(err);
@@ -35,13 +35,21 @@ class LestBetsUser implements Command {
       });
 
     if (!userBets) return;
+    if (userBets.length === 0) {
+      const embed = new EmbedBuilder()
+        .setColor([245, 73, 53])
+        .setTitle(`${user.username} ainda não fez nenhuma aposta`);
+
+      await interaction.reply({ embeds: [embed] });
+      return;
+    }
 
     const headEmbed = new EmbedBuilder()
       .setTitle(`Últimos ${userBets.length} apostas de ${user.username}`)
       .setColor([245, 73, 53])
       .setFooter({ text: 'Game beast' });
 
-    const embed = userBets.map((bet) => {
+    const embeds = userBets.map((bet) => {
       return new EmbedBuilder()
         .setTitle(`Game número ${bet.id_game}`)
         .setColor([245, 73, 53])
@@ -53,7 +61,7 @@ class LestBetsUser implements Command {
         .setTimestamp(new Date(bet.created_at));
     });
 
-    await interaction.reply({ embeds: [headEmbed, ...embed] });
+    await interaction.reply({ embeds: [headEmbed, ...embeds] });
   }
 }
 
