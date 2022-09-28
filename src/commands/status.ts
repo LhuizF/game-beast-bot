@@ -3,7 +3,7 @@ import { local } from '../services/api';
 import { UserModel } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
 
-class Points implements Command {
+class Status implements Command {
   name = 'status';
   description = 'Veja os detalhes da sua conta';
   async handle(interaction: Interaction): Promise<void> {
@@ -11,7 +11,7 @@ class Points implements Command {
     const userDiscord = interaction.user;
 
     const user = await local
-      .get<UserModel>(`user/${guildID}/${userDiscord.id}`)
+      .get<UserModel>(`guild/${guildID}/user/${userDiscord.id}`)
       .then((res) => res.data)
       .catch((err) => {
         console.log(err);
@@ -38,4 +38,4 @@ class Points implements Command {
   }
 }
 
-export default new Points();
+export default new Status();
