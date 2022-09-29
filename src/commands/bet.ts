@@ -1,6 +1,7 @@
+import axios, { AxiosError } from 'axios';
 import { EmbedBuilder } from 'discord.js';
 import { local } from '../services/api';
-import { NewBet } from '../types/api';
+import { MessageError, NewBet } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastOptions } from '../utils';
 
@@ -38,12 +39,25 @@ class ToBet implements Command {
         platform: 'discord'
       })
       .then((res) => res.data)
-      .catch((err) => {
-        console.log(err);
-        return null;
+      .catch((err: AxiosError) => {
+        return err;
       });
-    // tratar erros aqui
-    if (!bet) return;
+
+    if (bet instanceof Error) {
+      const response = bet.response?.data as MessageError;
+
+      if (response.mensagem === 'user not found') {
+        const embed = new EmbedBuilder().setTitle(
+          'Para começar a jogar utilize o comando `/jogar`'
+        );
+
+        await interaction.reply({ embeds: [embed] });
+        return;
+      }
+
+      await interaction.reply(response.mensagem);
+      return;
+    }
 
     const embed = new EmbedBuilder()
       .setTitle(`${user.username} acabou de apostar!`)

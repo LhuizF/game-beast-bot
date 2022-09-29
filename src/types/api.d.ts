@@ -74,3 +74,8 @@ export interface UserWin {
 }
 
 type Status = 'pending' | 'win' | 'lose';
+
+export interface MessageError {
+  mensagem: string;
+  data?: any;
+}

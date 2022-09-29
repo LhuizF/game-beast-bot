@@ -2,7 +2,7 @@ import { Status } from '../types/api';
 
 export const makeFieldInline = (name: string, value: string | number, inline = true) => ({
   name,
-  value: value.toString() || '',
+  value: `**${value.toString() || ''}**`,
   inline
 });
 
