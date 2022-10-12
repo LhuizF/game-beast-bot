@@ -3,9 +3,9 @@ import { local } from '../services/api';
 import { UserModel } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
 
-class Play implements Command {
-  readonly name = 'jogar';
-  readonly description = 'Crie uma conta para começar a jogar agora!';
+const play: Command = {
+  name: 'jogar',
+  description: 'Crie uma conta para começar a jogar agora!',
   async handle(interaction: Interaction): Promise<void> {
     const data = {
       name: interaction.user.username,
@@ -44,6 +44,6 @@ class Play implements Command {
 
     await interaction.reply({ embeds: [embed] });
   }
-}
+};
 
-export default new Play();
+export default play;

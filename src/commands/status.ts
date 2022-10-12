@@ -1,22 +1,16 @@
 import { EmbedBuilder } from 'discord.js';
-import { local } from '../services/api';
+import api from '../services/api';
 import { UserModel } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
 
-class Status implements Command {
-  name = 'status';
-  description = 'Veja os detalhes da sua conta';
+const status: Command = {
+  name: 'status',
+  description: 'Veja os detalhes da sua conta',
   async handle(interaction: Interaction): Promise<void> {
     const guildID = interaction.guildId;
     const userDiscord = interaction.user;
 
-    const user = await local
-      .get<UserModel>(`guild/${guildID}/user/${userDiscord.id}`)
-      .then((res) => res.data)
-      .catch((err) => {
-        console.log(err);
-        return null;
-      });
+    const user = await api.get<UserModel>(`guild/${guildID}/user/${userDiscord.id}`);
 
     if (!user) return;
     const [createAt] = user.created_at.toString().split('T');
@@ -36,6 +30,6 @@ class Status implements Command {
 
     await interaction.reply({ embeds: [embed] });
   }
-}
+};
 
-export default new Status();
+export default status;

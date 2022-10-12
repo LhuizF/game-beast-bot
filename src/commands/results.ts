@@ -4,16 +4,16 @@ import { GameResult } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
 import { makeFieldInline } from '../utils';
 
-class Results implements Command {
-  readonly name = 'resultados';
-  readonly description = 'Mostra o resultado dos últimos 3 jogos';
-  readonly options = [
+const results: Command = {
+  name: 'resultados',
+  description: 'Mostra o resultado dos últimos 3 jogos',
+  options: [
     {
       name: 'max',
       description: 'Quantidade máxima de resultados dos últimos (max 8)',
       type: 4
     }
-  ];
+  ],
 
   async handle(interaction: Interaction): Promise<void> {
     const [maxOption] = interaction.options.data;
@@ -24,13 +24,7 @@ class Results implements Command {
       return maxOption.value.toString();
     })();
 
-    const games = await local
-      .get<GameResult[]>(`/last-games?max=${max}`)
-      .then((res) => res.data)
-      .catch((err) => {
-        console.log(err);
-        return null;
-      });
+    const games = await local.get<GameResult[]>(`/last-games?max=${max}`);
 
     if (!games) return;
 
@@ -56,6 +50,6 @@ class Results implements Command {
 
     await interaction.reply({ embeds: [headEmbed, ...embed] });
   }
-}
+};
 
-export default new Results();
+export default results;

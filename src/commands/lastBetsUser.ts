@@ -4,16 +4,16 @@ import { BetModel } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastName, getStatus, makeFieldInline } from '../utils';
 
-class LestBetsUser implements Command {
-  readonly name = 'minhasapostas';
-  readonly description = 'Mostra suas últimas apostas';
-  readonly options = [
+const lestBetsUser: Command = {
+  name: 'minhasapostas',
+  description: 'Mostra suas últimas apostas',
+  options: [
     {
       name: 'max',
       description: 'Quantidade máxima de apostas dos últimos (max 5)',
       type: 4
     }
-  ];
+  ],
 
   async handle(interaction: Interaction): Promise<void> {
     const [maxOption] = interaction.options.data;
@@ -63,6 +63,6 @@ class LestBetsUser implements Command {
 
     await interaction.reply({ embeds: [headEmbed, ...embeds] });
   }
-}
+};
 
-export default new LestBetsUser();
+export default lestBetsUser;
