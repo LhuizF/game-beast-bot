@@ -1,7 +1,8 @@
 import { EmbedBuilder } from 'discord.js';
-import { local } from '../services/api';
+import api from '../services/api';
 import { UserModel } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
+import { handleError } from '../utils';
 
 const play: Command = {
   name: 'jogar',
@@ -14,14 +15,12 @@ const play: Command = {
       avatar: interaction.user.avatarURL()
     };
 
-    const user = await local
-      .post<UserModel>('/singup', data)
-      .then((res) => res.data)
-      .catch((err) => {
-        console.log(err);
-        return null;
-      });
+    const user = await api.post<UserModel>('/singup', data);
 
+    if (user instanceof Error) {
+      await handleError(interaction, user);
+      return;
+    }
     if (!user) {
       await interaction.reply('Ocorreu um erro na criação so seu usuário :(');
       return;

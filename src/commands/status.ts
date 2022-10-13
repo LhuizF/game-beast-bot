@@ -2,6 +2,7 @@ import { EmbedBuilder } from 'discord.js';
 import api from '../services/api';
 import { UserModel } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
+import { handleError } from '../utils';
 
 const status: Command = {
   name: 'status',
@@ -11,6 +12,11 @@ const status: Command = {
     const userDiscord = interaction.user;
 
     const user = await api.get<UserModel>(`guild/${guildID}/user/${userDiscord.id}`);
+
+    if (user instanceof Error) {
+      await handleError(interaction, user);
+      return;
+    }
 
     if (!user) return;
     const [createAt] = user.created_at.toString().split('T');
@@ -23,10 +29,10 @@ const status: Command = {
       .addFields(
         { name: 'Nome', value: user.name, inline: true },
         { name: 'Pontos atuais', value: user.points.toString(), inline: true },
-        { name: 'Criado', value: newDate }
+        { name: 'Criado em', value: newDate }
       )
-      .setTimestamp()
-      .setFooter({ text: 'Game beast' });
+      .setTimestamp();
+    // .setFooter({ text: 'Game beast' });
 
     await interaction.reply({ embeds: [embed] });
   }

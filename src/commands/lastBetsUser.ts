@@ -1,8 +1,9 @@
 import { EmbedBuilder } from 'discord.js';
-import { local } from '../services/api';
+import api from '../services/api';
 import { BetModel } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
-import { getBeastName, getStatus, makeFieldInline } from '../utils';
+import { getBeastName, getStatus, handleError, makeFieldInline } from '../utils';
+import { ptbr as translator } from '../langs';
 
 const lestBetsUser: Command = {
   name: 'minhasapostas',
@@ -26,15 +27,15 @@ const lestBetsUser: Command = {
     const id_guild = interaction.guildId;
     const user = interaction.user;
 
-    const userBets = await local
-      .get<BetModel[]>(`/guild/${id_guild}/user/${user.id}/bets?max=${max}`)
-      .then((res) => res.data)
-      .catch((err) => {
-        console.log(err);
-        return null;
-      });
+    const userBets = await api.get<BetModel[]>(
+      `/guild/${id_guild}/user/${user.id}/bets?max=${max}`
+    );
 
-    if (!userBets) return;
+    if (userBets instanceof Error) {
+      await handleError(interaction, userBets);
+      return;
+    }
+
     if (userBets.length === 0) {
       const embed = new EmbedBuilder()
         .setColor([245, 73, 53])
@@ -46,8 +47,8 @@ const lestBetsUser: Command = {
 
     const headEmbed = new EmbedBuilder()
       .setTitle(`Últimos ${userBets.length} apostas de ${user.username}`)
-      .setColor([245, 73, 53])
-      .setFooter({ text: 'Game beast' });
+      .setColor([245, 73, 53]);
+    //.setFooter({ text: 'Game beast' });
 
     const embeds = userBets.map((bet) => {
       return new EmbedBuilder()

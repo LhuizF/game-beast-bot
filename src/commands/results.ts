@@ -1,8 +1,8 @@
 import { EmbedBuilder } from 'discord.js';
-import { local } from '../services/api';
+import api from '../services/api';
 import { GameResult } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
-import { makeFieldInline } from '../utils';
+import { handleError, makeFieldInline } from '../utils';
 
 const results: Command = {
   name: 'resultados',
@@ -24,14 +24,17 @@ const results: Command = {
       return maxOption.value.toString();
     })();
 
-    const games = await local.get<GameResult[]>(`/last-games?max=${max}`);
+    const games = await api.get<GameResult[]>(`/last-games?max=${max}`);
 
-    if (!games) return;
+    if (games instanceof Error) {
+      await handleError(interaction, games);
+      return;
+    }
 
     const headEmbed = new EmbedBuilder()
       .setTitle(`Últimos ${games.length} resultados`)
-      .setColor([245, 73, 53])
-      .setFooter({ text: 'Game beast' });
+      .setColor([245, 73, 53]);
+    // .setFooter({ text: 'Game beast' });
 
     const embed = games.map((game) => {
       const totalPoints = game.winners.reduce((acc, win) => acc + win.pointsReceived, 0);

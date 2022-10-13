@@ -1,9 +1,9 @@
-import axios, { AxiosError } from 'axios';
 import { EmbedBuilder } from 'discord.js';
-import { local } from '../services/api';
-import { MessageError, NewBet } from '../types/api';
+import api from '../services/api';
+import { NewBet } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
-import { getBeastOptions } from '../utils';
+import { getBeastOptions, handleError } from '../utils';
+import { ptbr as translator } from '../langs';
 
 const toBet: Command = {
   name: 'apostar',
@@ -27,35 +27,19 @@ const toBet: Command = {
   async handle(interaction: Interaction): Promise<void> {
     const [points, beast] = interaction.options.data;
 
-    const id_guild = interaction.guildId;
+    const id_guild = interaction.guildId || '';
     const user = interaction.user;
 
-    const bet = await local
-      .post<NewBet>(`/bet`, {
-        id_guild,
-        id_discord: user.id,
-        id_beast: beast.value,
-        points: points.value,
-        platform: 'discord'
-      })
-      .then((res) => res.data)
-      .catch((err: AxiosError) => {
-        return err;
-      });
+    const bet = await api.post<NewBet>(`/bet`, {
+      id_guild: id_guild,
+      id_discord: user.id,
+      id_beast: beast.value,
+      points: points.value,
+      platform: 'discord'
+    });
 
     if (bet instanceof Error) {
-      const response = bet.response?.data as MessageError;
-
-      if (response.mensagem === 'user not found') {
-        const embed = new EmbedBuilder().setTitle(
-          'Para começar a jogar utilize o comando `/jogar`'
-        );
-
-        await interaction.reply({ embeds: [embed] });
-        return;
-      }
-
-      await interaction.reply(response.mensagem);
+      await handleError(interaction, bet);
       return;
     }
 
@@ -66,8 +50,8 @@ const toBet: Command = {
         { name: 'Pontos', value: bet.points.toString(), inline: true },
         { name: 'Animal', value: bet.beast, inline: true }
       )
-      .setTimestamp()
-      .setFooter({ text: 'Game beast' });
+      .setTimestamp();
+    // .setFooter({ text: 'Game beast' });
 
     await interaction.reply({ embeds: [embed] });
   }
