@@ -3,7 +3,6 @@ import api from '../services/api';
 import { NewBet } from '../types/api';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastOptions, handleError } from '../utils';
-import { ptbr as translator } from '../langs';
 
 const toBet: Command = {
   name: 'apostar',
