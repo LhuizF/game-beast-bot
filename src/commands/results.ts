@@ -44,8 +44,8 @@ const results: Command = {
         .setColor([245, 73, 53])
         .addFields(
           makeFieldInline('Resultado', game.beastWin?.name || '', false),
-          makeFieldInline('Total de apostas', game.totalBets.toString()),
-          makeFieldInline('Total de ganhadores', game.winners.length.toString()),
+          makeFieldInline('Total de apostas', game.totalBets),
+          makeFieldInline('Total de ganhadores', game.winners.length),
           makeFieldInline('Total pontos ganhos', totalPoints)
         )
         .setTimestamp(new Date(game.date));
