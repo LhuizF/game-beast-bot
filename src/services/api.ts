@@ -43,7 +43,7 @@ class Api {
       .catch(this.handleError);
   }
 
-  handleError(err: AxiosError): RequestError {
+  private handleError(err: AxiosError): RequestError {
     if (axios.isAxiosError(err)) {
       const response = err.response?.data as any;
       return new RequestError(
