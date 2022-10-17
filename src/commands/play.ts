@@ -9,7 +9,7 @@ const play: Command = {
   description: 'Crie uma conta para começar a jogar agora!',
   async handle(interaction: Interaction): Promise<void> {
     const data = {
-      name: interaction.user.username,
+      name: interaction.user.tag,
       id_guild: interaction.guildId,
       id_discord: interaction.user.id,
       avatar: interaction.user.avatarURL()
