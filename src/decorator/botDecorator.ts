@@ -27,5 +27,25 @@ export class BotDecorator implements Bot {
         return;
       }
     });
+
+    client.on('guildDelete', async (guild: Guild) => {
+      const oldGuild = await api.put<GuildModel>(`/disable-guild/${guild.id}`);
+
+      if (oldGuild instanceof Error) {
+        // log de error
+        return;
+      }
+
+      // const roles = guild.roles.cache;
+
+      // const role = roles.find((r) => r.name === 'Player');
+      // role && role.delete();
+
+      // const channel = guild.channels.cache.get(oldGuild.channel);
+      // channel && channel.delete();
+
+      // const category = channel?.parent;
+      // category && category.delete();
+    });
   }
 }
