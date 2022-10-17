@@ -43,6 +43,13 @@ class Api {
       .catch(this.handleError);
   }
 
+  async put<T>(path: string, params?: PostParams) {
+    return await this.api
+      .put<T>(path, { ...params })
+      .then((res) => res.data)
+      .catch(this.handleError);
+  }
+
   private handleError(err: AxiosError): RequestError {
     if (axios.isAxiosError(err)) {
       const response = err.response?.data as any;
