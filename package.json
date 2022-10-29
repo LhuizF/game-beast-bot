@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec sucrase-node src/server.ts",
-    "start": "sucrase-node src/server.ts"
+    "start": "node ./build/server.js",
+    "build" : "sucrase ./src -d ./build --transforms typescript,imports"
   },
   "keywords": [],
   "author": "",
