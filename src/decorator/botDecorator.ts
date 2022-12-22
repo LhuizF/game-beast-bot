@@ -6,7 +6,7 @@ import api from '../services/api';
 import { GuildModel } from '../types/types';
 
 export class BotDecorator implements Bot {
-  constructor(private readonly clientBot: ClientBot) { }
+  constructor(private readonly clientBot: ClientBot) {}
 
   async start(): Promise<void> {
     await this.clientBot.start(this.clientBot.token);

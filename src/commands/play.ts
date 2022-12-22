@@ -27,7 +27,7 @@ const play: Command = {
     }
 
     const guildMember = interaction.guild?.members.cache.get(interaction.user.id);
-    const role = interaction.guild?.roles.cache.filter((r) => r.name == 'Player');
+    const role = interaction.guild?.roles.cache.find((r) => r.id === user.roleId);
 
     if (!role || !guildMember) return;
     await guildMember.roles.add(role);

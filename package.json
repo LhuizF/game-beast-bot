@@ -7,7 +7,7 @@
     "dev": "nodemon --exec sucrase-node src/server.ts",
     "start": "node ./build/server.js",
     "build" : "sucrase ./src -d ./build --transforms typescript,imports",
-    "start:test" : "npm rum build && node ./build/server.js"
+    "start:test" : "npm run build && node ./build/server.js"
   },
   "keywords": [],
   "author": "",

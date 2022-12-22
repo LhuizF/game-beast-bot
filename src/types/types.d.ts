@@ -16,6 +16,7 @@ export interface UserModel {
   password?: string;
   avatar: string;
   created_at: Date;
+  roleId: string;
 }
 
 export interface BeastModel {
