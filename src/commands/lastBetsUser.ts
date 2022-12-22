@@ -28,7 +28,8 @@ const lestBetsUser: Command = {
     const user = interaction.user;
 
     const userBets = await api.get<BetModel[]>(
-      `/guild/${id_guild}/user/${user.id}/bets?max=${max}`
+      `/guild/${id_guild}/user/${user.id}/bets`,
+      { params: { max } }
     );
 
     if (userBets instanceof Error) {

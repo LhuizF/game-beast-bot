@@ -13,13 +13,16 @@ export class BotDecorator implements Bot {
     const client = this.clientBot.getClient();
 
     client.on('guildCreate', async (guild: Guild) => {
-      const channel = await createChannel(guild, client.user?.id || '');
+      const { channelId, roleId } = await createChannel(guild, client.user?.id || '');
 
       const guildInDb = await api.post<GuildModel>('/create-guild', {
         id: guild.id,
         name: guild.name,
         icon: guild.iconURL(),
-        channel: channel.id
+        channel: channelId,
+        role: roleId,
+        isLocal: true,
+        withToken: true
       });
 
       if (guildInDb instanceof Error) {

@@ -1,6 +1,11 @@
-import { ChannelType, Guild, TextChannel } from 'discord.js';
+import { ChannelType, Guild } from 'discord.js';
 
-export const createChannel = async (guild: Guild, id: string): Promise<TextChannel> => {
+interface CreateChannel {
+  channelId: string;
+  roleId: string;
+}
+
+export const createChannel = async (guild: Guild, id: string): Promise<CreateChannel> => {
   const role = await guild.roles.create({
     name: 'Player',
     color: 'Red',
@@ -46,5 +51,5 @@ export const createChannel = async (guild: Guild, id: string): Promise<TextChann
     topic: 'Resultado dos jogos aqui todos os dias às 10hs, 15hs e 20hs'
   });
 
-  return channel;
+  return { channelId: channel.id, roleId: role.id };
 };

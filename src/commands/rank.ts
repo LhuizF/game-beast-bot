@@ -22,7 +22,7 @@ const rank: Command = {
     const isGlobal = options.length > 0 ? !!options[0].value : false;
     const id_guild = interaction.guildId as string;
 
-    const params = isGlobal ? undefined : { server: id_guild };
+    const params = !isGlobal ? { server: id_guild } : undefined;
 
     const usersRank = await api.get<UserModel[]>('/rank', { params });
 

@@ -1,56 +1,64 @@
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import axios, { AxiosError } from 'axios';
+import { RequestError } from '../../build/services/api';
+import { APIConfig, RequestConfig } from '../types/protocols/api';
 
-interface GetParams {
-  params?: { [key: string]: string | number };
-}
-
-interface PostParams {
-  [key: string]: any;
-  params?: { [key: string]: string | number };
-}
-
-export class RequestError extends Error {
-  status: number;
-  constructor(name = 'axios error', message = 'unexpected error', status = 400) {
-    super();
-    this.message = message;
-    this.status = status;
-    this.name = name;
-  }
-}
+const localBaseUrl = 'http://localhost:3333/v1';
 
 class Api {
-  private readonly api: AxiosInstance;
+  private readonly startConfig = {} as APIConfig;
 
-  constructor(private readonly baseUrl: string) {
-    const url = process.env.DEV ? 'http://localhost:3333/v1' : this.baseUrl;
-    this.api = axios.create({
-      baseURL: url
+  constructor(startConfig = {} as APIConfig) {
+    this.startConfig = startConfig;
+  }
+
+  private requestConfig(config: APIConfig) {
+    const baseURL = config.isLocal || this.startConfig.isLocal ? localBaseUrl : '';
+
+    const headers = {
+      discord_token:
+        config.withToken || this.startConfig.withToken
+          ? 'bot-token ' + process.env.DISCORD_TOKEN
+          : ''
+    };
+
+    return axios.create({
+      baseURL,
+      headers
     });
   }
 
-  async get<T>(path: string, params?: GetParams) {
-    return await this.api
-      .get<T>(path, { ...params })
+  async get<T>(path: string, configs = {} as RequestConfig) {
+    const { params, isLocal, withToken } = configs;
+    const api = this.requestConfig({ isLocal, withToken });
+
+    return await api
+      .get<T>(path, { params })
       .then((res) => res.data)
       .catch(this.handleError);
   }
 
-  async post<T>(path: string, params?: PostParams) {
-    return await this.api
-      .post<T>(path, { ...params })
+  async post<T>(path: string, configs = {} as RequestConfig) {
+    const { params, isLocal, withToken, ...data } = configs;
+    const api = this.requestConfig({ isLocal, withToken });
+
+    return await api
+      .post<T>(path, { params, ...data })
       .then((res) => res.data)
       .catch(this.handleError);
   }
 
-  async put<T>(path: string, params?: PostParams) {
-    return await this.api
-      .put<T>(path, { ...params })
+  async put<T>(path: string, configs = {} as RequestConfig) {
+    const { params, isLocal, withToken, ...data } = configs;
+    const api = this.requestConfig({ isLocal, withToken });
+
+    return await api
+      .put<T>(path, { params, ...data })
       .then((res) => res.data)
       .catch(this.handleError);
   }
 
   private handleError(err: AxiosError): RequestError {
+    console.log('handleError', err?.response);
     if (axios.isAxiosError(err)) {
       const response = err.response?.data as any;
       return new RequestError(
@@ -64,4 +72,4 @@ class Api {
   }
 }
 
-export default new Api('');
+export default new Api({ isLocal: true, withToken: true });
