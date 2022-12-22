@@ -3,10 +3,10 @@ import { ClientBot } from '../config/client';
 import { Bot } from '../types/protocols/bot';
 import { createChannel } from '../utils';
 import api from '../services/api';
-import { GuildModel } from '../types/api';
+import { GuildModel } from '../types/types';
 
 export class BotDecorator implements Bot {
-  constructor(private readonly clientBot: ClientBot) {}
+  constructor(private readonly clientBot: ClientBot) { }
 
   async start(): Promise<void> {
     await this.clientBot.start(this.clientBot.token);

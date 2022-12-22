@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import api from '../services/api';
-import { GameResult } from '../types/api';
+import { GameResult } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { handleError, makeFieldInline } from '../utils';
 

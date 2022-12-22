@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import api from '../services/api';
-import { NewBet } from '../types/api';
+import { NewBet } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastOptions, handleError } from '../utils';
 

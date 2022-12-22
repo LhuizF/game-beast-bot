@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import api from '../services/api';
-import { UserModel } from '../types/api';
+import { UserModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { handleError } from '../utils';
 

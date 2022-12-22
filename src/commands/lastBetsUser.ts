@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import api from '../services/api';
-import { BetModel } from '../types/api';
+import { BetModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastName, getStatus, handleError, makeFieldInline } from '../utils';
 import { ptbr as translator } from '../langs';
