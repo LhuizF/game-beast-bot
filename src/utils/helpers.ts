@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { ptbr as translator } from '../langs';
-import { RequestError } from '../services/api';
+import { RequestError } from '../types/protocols/api';
 import { Status } from '../types/api';
 import { Interaction } from '../types/protocols/command';
 

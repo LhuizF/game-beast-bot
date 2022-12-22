@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { RequestError } from '../../build/services/api';
+import { RequestError } from '../types/protocols/api';
 import { APIConfig, RequestConfig } from '../types/protocols/api';
 
 const localBaseUrl = 'http://localhost:3333/v1';
