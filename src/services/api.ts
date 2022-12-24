@@ -3,6 +3,7 @@ import { RequestError } from '../errors';
 import { APIConfig, RequestConfig } from '../types/protocols/api';
 
 const localBaseUrl = 'http://localhost:3333/v1';
+const prodBaseUrl = 'https://game-beast-api-production.up.railway.app/v1';
 
 class Api {
   private readonly startConfig = {} as APIConfig;
@@ -12,7 +13,8 @@ class Api {
   }
 
   private requestConfig(config: APIConfig) {
-    const baseURL = config.isLocal || this.startConfig.isLocal ? localBaseUrl : '';
+    const baseURL =
+      config.isLocal || this.startConfig.isLocal ? localBaseUrl : prodBaseUrl;
 
     const headers = {
       discord_token:
@@ -58,7 +60,7 @@ class Api {
   }
 
   private handleError(err: AxiosError): RequestError {
-    console.log('handleError', err?.response);
+    console.log('handleError', err);
     if (axios.isAxiosError(err)) {
       const response = err.response?.data as any;
       return new RequestError(
@@ -72,4 +74,4 @@ class Api {
   }
 }
 
-export default new Api({ isLocal: true, withToken: true });
+export default new Api({ withToken: true });

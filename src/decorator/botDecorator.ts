@@ -21,7 +21,6 @@ export class BotDecorator implements Bot {
         icon: guild.iconURL(),
         channel: channelId,
         role: roleId,
-        isLocal: true,
         withToken: true
       });
 
