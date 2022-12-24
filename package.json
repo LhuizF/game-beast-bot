@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "nodemon --exec sucrase-node src/server.ts",
     "start": "node ./build/server.js",
-    "build" : "sucrase ./src -d ./build --transforms typescript,imports",
-    "start:test" : "npm run build && node ./build/server.js"
+    "build": "sucrase ./src -d ./build --transforms typescript,imports",
+    "start:test": "npm run build && node ./build/server.js",
+    "readFile": "node ./readFiles.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.20",
+    "pre-push": "^0.1.4",
     "sucrase": "^3.27.0",
     "typescript": "^4.8.3",
     "typescript-eslint": "^0.0.1-alpha.0"
@@ -28,5 +30,8 @@
     "axios": "^0.27.2",
     "discord.js": "^14.3.0",
     "dotenv": "^16.0.2"
-  }
+  },
+  "pre-push": [
+    "readFile"
+  ]
 }
