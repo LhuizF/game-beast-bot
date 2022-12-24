@@ -54,10 +54,8 @@ export interface GameModel {
 }
 
 export interface GameResult extends BetsResult {
-  id_game: number;
-  beastWin: BeastModel | null;
-  create_at: Date;
-  date: Date;
+  game: GameModel;
+  beastWin: BeastModel;
 }
 
 export interface BetsResult {

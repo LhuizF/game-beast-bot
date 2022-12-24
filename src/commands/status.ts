@@ -29,7 +29,7 @@ const status: Command = {
       .addFields(
         { name: 'Nome', value: user.name, inline: true },
         { name: 'Pontos atuais', value: user.points.toString(), inline: true },
-        { name: 'Criado em', value: newDate }
+        { name: 'Criado em', value: newDate.replace(/-/g, '/') }
       )
       .setTimestamp();
     // .setFooter({ text: 'Game beast' });

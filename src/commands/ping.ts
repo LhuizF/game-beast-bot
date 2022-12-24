@@ -1,3 +1,4 @@
+import api from '../services/api';
 import { Command, Interaction } from '../types/protocols/command';
 
 class Ping implements Command {

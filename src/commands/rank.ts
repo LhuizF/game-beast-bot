@@ -35,6 +35,7 @@ const rank: Command = {
       const position = `${index + 1}º`;
 
       return new EmbedBuilder()
+        .setColor([245, 73, 53])
         .addFields(
           { name: 'Posição', value: position, inline: true },
           { name: 'Nome', value: user.name, inline: true },
@@ -44,7 +45,7 @@ const rank: Command = {
     });
 
     const embed = new EmbedBuilder()
-      .setTitle(`Top 5 jogadores ${isGlobal && 'Global'}`)
+      .setTitle(`Top 5 jogadores ${isGlobal ? 'Global' : 'do Servidor'}`)
       .setColor([245, 73, 53])
       .setTimestamp();
 

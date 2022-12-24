@@ -3,7 +3,6 @@ import api from '../services/api';
 import { BetModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastName, getStatus, handleError, makeFieldInline } from '../utils';
-import { ptbr as translator } from '../langs';
 
 const lestBetsUser: Command = {
   name: 'minhasapostas',
@@ -47,7 +46,7 @@ const lestBetsUser: Command = {
     }
 
     const headEmbed = new EmbedBuilder()
-      .setTitle(`Últimos ${userBets.length} apostas de ${user.username}`)
+      .setTitle(`Últimas ${userBets.length} apostas de ${user.username}`)
       .setColor([245, 73, 53]);
     //.setFooter({ text: 'Game beast' });
 
@@ -55,8 +54,10 @@ const lestBetsUser: Command = {
       return new EmbedBuilder()
         .setTitle(`Game número ${bet.id_game}`)
         .setColor([245, 73, 53])
+        .setDescription(
+          `Você apostou no número **${bet.id_beast} ${getBeastName(bet.id_beast)}**`
+        )
         .addFields(
-          makeFieldInline('Você apostou no', getBeastName(bet.id_beast)),
           makeFieldInline('Pontos', bet.points),
           makeFieldInline('Status', getStatus(bet.status))
         )

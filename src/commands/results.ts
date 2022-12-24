@@ -3,6 +3,7 @@ import api from '../services/api';
 import { GameResult } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { handleError, makeFieldInline } from '../utils';
+import { time } from '../utils/helpers';
 
 const results: Command = {
   name: 'resultados',
@@ -20,35 +21,52 @@ const results: Command = {
 
     const max: string = (() => {
       if (!maxOption?.value) return '3';
-      if (maxOption.value > 10 || maxOption.value <= 0) return '3';
+      if (maxOption.value > 8 || maxOption.value <= 0) return '3';
       return maxOption.value.toString();
     })();
 
-    const games = await api.get<GameResult[]>(`/last-games?max=${max}`);
+    const results = await api.get<GameResult[]>(`/last-games?max=${max}`);
 
-    if (games instanceof Error) {
-      await handleError(interaction, games);
+    if (results instanceof Error) {
+      await handleError(interaction, results);
+      return;
+    }
+
+    if (results.length === 0) {
+      const embed = new EmbedBuilder()
+        .setColor([245, 73, 53])
+        .setTitle('Não há resultados disponíveis');
+
+      await interaction.reply({ embeds: [embed] });
       return;
     }
 
     const headEmbed = new EmbedBuilder()
-      .setTitle(`Últimos ${games.length} resultados`)
+      .setTitle(`Últimos ${results.length} resultados`)
       .setColor([245, 73, 53]);
     // .setFooter({ text: 'Game beast' });
 
-    const embed = games.map((game) => {
-      const totalPoints = game.winners.reduce((acc, win) => acc + win.pointsReceived, 0);
+    const embed = results.map((result) => {
+      const totalPoints = result.winners.reduce(
+        (acc, win) => acc + win.pointsReceived,
+        0
+      );
+
+      const date = new Date(result.game.created_at).toLocaleString().split(' ')[0];
+      const gameTime = time[result.game.time as keyof typeof time];
 
       return new EmbedBuilder()
-        .setTitle(`Game número ${game.id_game}`)
+        .setTitle(`Game número ${result.game.id}`)
         .setColor([245, 73, 53])
-        .addFields(
-          makeFieldInline('Resultado', game.beastWin?.name || '', false),
-          makeFieldInline('Total de apostas', game.totalBets),
-          makeFieldInline('Total de ganhadores', game.winners.length),
-          makeFieldInline('Total pontos ganhos', totalPoints)
+        .setFooter({ text: `DIa: ${date} Horário: ${gameTime}` })
+        .setDescription(
+          `O número sorteado foi o **${result.beastWin?.id} ${result.beastWin?.name}**`
         )
-        .setTimestamp(new Date(game.date));
+        .addFields(
+          makeFieldInline('Total de apostas', result.totalBets),
+          makeFieldInline('Total de ganhadores', result.winners.length),
+          makeFieldInline('Total pontos ganhos', totalPoints)
+        );
     });
 
     await interaction.reply({ embeds: [headEmbed, ...embed] });

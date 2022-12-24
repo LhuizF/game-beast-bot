@@ -35,7 +35,11 @@ export class ClientBot implements Bot {
 
       const cmd = this.commands.get(interaction.commandName);
       if (!cmd) return;
-      cmd.handle(interaction);
+      try {
+        cmd.handle(interaction);
+      } catch (error) {
+        console.error(error);
+      }
     });
 
     this.client.login(token);
