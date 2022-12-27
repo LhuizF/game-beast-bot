@@ -4,16 +4,16 @@ import { BetModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastName, getStatus, handleError, makeFieldInline } from '../utils';
 
-const lestBetsUser: Command = {
-  name: 'minhasapostas',
-  description: 'Mostra suas últimas apostas',
-  options: [
+class LestBetsUser implements Command {
+  name = 'minhasapostas';
+  description = 'Mostra suas últimas apostas';
+  options = [
     {
       name: 'max',
       description: 'Quantidade máxima de apostas dos últimos (max 5)',
       type: 4
     }
-  ],
+  ];
 
   async handle(interaction: Interaction): Promise<void> {
     const [maxOption] = interaction.options.data;
@@ -41,7 +41,7 @@ const lestBetsUser: Command = {
         .setColor([245, 73, 53])
         .setTitle(`${user.username} ainda não fez nenhuma aposta`);
 
-      await interaction.reply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
       return;
     }
 
@@ -64,8 +64,8 @@ const lestBetsUser: Command = {
         .setTimestamp(new Date(bet.created_at));
     });
 
-    await interaction.reply({ embeds: [headEmbed, ...embeds] });
+    await interaction.editReply({ embeds: [headEmbed, ...embeds] });
   }
-};
+}
 
-export default lestBetsUser;
+export default LestBetsUser;

@@ -5,16 +5,16 @@ import { Command, Interaction } from '../types/protocols/command';
 import { handleError, makeFieldInline } from '../utils';
 import { time } from '../utils/helpers';
 
-const results: Command = {
-  name: 'resultados',
-  description: 'Mostra o resultado dos últimos 3 jogos',
+class Results implements Command {
+  name = 'resultados';
+  description = 'Mostra o resultado dos últimos 3 jogos';
   options: [
     {
-      name: 'max',
-      description: 'Quantidade máxima de resultados dos últimos (max 8)',
-      type: 4
+      name: 'max';
+      description: 'Quantidade máxima de resultados dos últimos (max 8)';
+      type: 4;
     }
-  ],
+  ];
 
   async handle(interaction: Interaction): Promise<void> {
     const [maxOption] = interaction.options.data;
@@ -37,7 +37,7 @@ const results: Command = {
         .setColor([245, 73, 53])
         .setTitle('Não há resultados disponíveis');
 
-      await interaction.reply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
       return;
     }
 
@@ -69,8 +69,8 @@ const results: Command = {
         );
     });
 
-    await interaction.reply({ embeds: [headEmbed, ...embed] });
+    await interaction.editReply({ embeds: [headEmbed, ...embed] });
   }
-};
+}
 
-export default results;
+export default Results;

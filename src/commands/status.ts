@@ -4,9 +4,10 @@ import { UserModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { handleError } from '../utils';
 
-const status: Command = {
-  name: 'status',
-  description: 'Veja os detalhes da sua conta',
+class Status implements Command {
+  name = 'status';
+  description = 'Veja os detalhes da sua conta';
+
   async handle(interaction: Interaction): Promise<void> {
     const guildID = interaction.guildId;
     const userDiscord = interaction.user;
@@ -34,8 +35,8 @@ const status: Command = {
       .setTimestamp();
     // .setFooter({ text: 'Game beast' });
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   }
-};
+}
 
-export default status;
+export default Status;

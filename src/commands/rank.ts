@@ -4,17 +4,17 @@ import { UserModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { handleError } from '../utils';
 
-const rank: Command = {
-  name: 'rank',
-  description: 'Veja os 5 jogadores com mais pontos no servido atual',
-  options: [
+class Rank implements Command {
+  name = 'rank';
+  description = 'Veja os 5 jogadores com mais pontos no servido atual';
+  options = [
     {
       name: 'global',
       description:
         'Veja os 5 jogadores com mais pontos em todos os servidores que o bot esta',
       type: 5
     }
-  ],
+  ];
 
   async handle(interaction: Interaction): Promise<void> {
     const options = interaction.options.data;
@@ -51,8 +51,8 @@ const rank: Command = {
 
     if (!isGlobal) embed.setDescription(`Server: **${interaction.guild?.name}**`);
 
-    await interaction.reply({ embeds: [embed, ...rank] });
+    await interaction.editReply({ embeds: [embed, ...rank] });
   }
-};
+}
 
-export default rank;
+export default Rank;

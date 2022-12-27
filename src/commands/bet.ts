@@ -4,10 +4,10 @@ import { NewBet } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastOptions, handleError } from '../utils';
 
-const toBet: Command = {
-  name: 'apostar',
-  description: 'Aposte seus pontos agora!',
-  options: [
+class ToBet implements Command {
+  name = 'apostar';
+  description = 'Aposte seus pontos agora!';
+  options = [
     {
       name: 'pontos',
       description: 'Quantidade de pontos que deseja apostar',
@@ -21,7 +21,7 @@ const toBet: Command = {
       required: true,
       choices: getBeastOptions()
     }
-  ],
+  ];
 
   async handle(interaction: Interaction): Promise<void> {
     const [points, beast] = interaction.options.data;
@@ -52,8 +52,8 @@ const toBet: Command = {
       .setTimestamp();
     // .setFooter({ text: 'Game beast' });
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   }
-};
+}
 
-export default toBet;
+export default ToBet;

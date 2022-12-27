@@ -7,7 +7,8 @@ export const useCommands = async () => {
 
   const commands: Array<[string, Command]> = await Promise.all(
     fs.readdirSync(commandsFolder).map(async (file) => {
-      const command = (await import(`../commands/${file}`)).default;
+      const CommandClass = (await import(`../commands/${file}`)).default;
+      const command = new CommandClass();
       console.log(`/${command.name}`);
       return [command.name, { ...command, handle: command.handle }];
     })

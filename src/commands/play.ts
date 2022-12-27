@@ -4,9 +4,10 @@ import { UserModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { handleError } from '../utils';
 
-const play: Command = {
-  name: 'jogar',
-  description: 'Crie uma conta para começar a jogar agora!',
+class Play implements Command {
+  name = 'jogar';
+  description = 'Crie uma conta para começar a jogar agora!';
+
   async handle(interaction: Interaction): Promise<void> {
     const data = {
       name: interaction.user.tag,
@@ -22,7 +23,7 @@ const play: Command = {
       return;
     }
     if (!user) {
-      await interaction.reply('Ocorreu um erro na criação so seu usuário :(');
+      await interaction.editReply('Ocorreu um erro na criação so seu usuário :(');
       return;
     }
 
@@ -41,8 +42,8 @@ const play: Command = {
       .setTimestamp()
       .setFooter({ text: 'Game beast' });
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   }
-};
+}
 
-export default play;
+export default Play;
