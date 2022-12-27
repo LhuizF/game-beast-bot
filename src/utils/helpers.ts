@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, TextChannel } from 'discord.js';
 import { ptbr as translator } from '../langs';
 import { RequestError } from '../errors';
 import { Status } from '../types/types';
@@ -24,13 +24,26 @@ export const getStatus = (status: Status): string => {
 export const handleError = async (interaction: Interaction, error: RequestError): Promise<void> => {
   const message = translator[error.message as keyof typeof translator] || 'Erro interno';
 
+  const text = JSON.stringify(error);
+
+  sendLog(interaction, text);
+
   const embed = new EmbedBuilder().setTitle(message);
 
-  await interaction.reply({ ephemeral: true, embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 };
 
 export const time = {
   1: 'Manha',
   2: 'Tarde',
   3: 'Noite'
+};
+
+export const sendLog = (interaction: Interaction, message: string): void => {
+  const { client } = interaction;
+  const channelId = process.env.CHANNEL_LOG as string;
+
+  const channel = client.channels.cache.get(channelId) as TextChannel;
+
+  channel.send(message);
 };

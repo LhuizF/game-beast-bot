@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Command } from '../types/protocols/command';
+import { LogDecorator } from '../decorator/logDecorator';
 
 export const useCommands = async () => {
   const commandsFolder = path.join(__dirname, '../', './commands');
@@ -9,8 +10,9 @@ export const useCommands = async () => {
     fs.readdirSync(commandsFolder).map(async (file) => {
       const CommandClass = (await import(`../commands/${file}`)).default;
       const command = new CommandClass();
-      console.log(`/${command.name}`);
-      return [command.name, { ...command, handle: command.handle }];
+      const commandWithLog = new LogDecorator(command);
+      console.log(`/${commandWithLog.name}`);
+      return [commandWithLog.name, { ...commandWithLog, handle: commandWithLog.handle }];
     })
   );
 
