@@ -8,7 +8,8 @@
     "start": "node ./build/server.js",
     "build": "sucrase ./src -d ./build --transforms typescript,imports",
     "start:test": "npm run build && node ./build/server.js",
-    "readFile": "node ./readFiles.js"
+    "readFile": "node ./readFiles.js",
+    "deploy": "npm run readFile && discloud commit"
   },
   "keywords": [],
   "author": "",

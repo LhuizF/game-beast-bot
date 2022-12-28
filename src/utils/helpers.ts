@@ -45,5 +45,7 @@ export const sendLog = (interaction: Interaction, message: string): void => {
 
   const channel = client.channels.cache.get(channelId) as TextChannel;
 
-  channel.send(message);
+  const embed = new EmbedBuilder().setTitle('LOG 💾').setDescription(message);
+
+  channel.send({ embeds: [embed] });
 };
