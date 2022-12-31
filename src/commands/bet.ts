@@ -1,8 +1,8 @@
-import { EmbedBuilder } from 'discord.js';
 import api from '../services/api';
 import { NewBet } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastOptions, handleError } from '../utils';
+import { makeEmbed } from '../utils/makeEmbed';
 
 class ToBet implements Command {
   name = 'apostar';
@@ -42,17 +42,19 @@ class ToBet implements Command {
       return;
     }
 
-    const embed = new EmbedBuilder()
-      .setTitle(`${user.username} acabou de apostar!`)
-      .setColor([245, 73, 53])
-      .addFields(
-        { name: 'Pontos', value: bet.points.toString(), inline: true },
-        { name: 'Animal', value: bet.beast, inline: true }
-      )
-      .setTimestamp();
-    // .setFooter({ text: 'Game beast' });
+    const message = [
+      `Animal: ${bet.beast}`,
+      `Pontos: ${bet.points}`
+      // multiplicador do game atual e quanto vai ganhar
+    ];
 
-    await interaction.editReply({ embeds: [embed] });
+    const embeds = makeEmbed({
+      type: 'success',
+      title: `${user.username} acabou de apostar!`,
+      description: message
+    });
+
+    await interaction.editReply({ embeds });
   }
 }
 

@@ -3,6 +3,7 @@ import api from '../services/api';
 import { BetModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { getBeastName, getStatus, handleError, makeFieldInline } from '../utils';
+import { makeEmbed } from '../utils/makeEmbed';
 
 class LestBetsUser implements Command {
   name = 'minhasapostas';
@@ -37,34 +38,36 @@ class LestBetsUser implements Command {
     }
 
     if (userBets.length === 0) {
-      const embed = new EmbedBuilder()
-        .setColor([245, 73, 53])
-        .setTitle(`${user.username} ainda não fez nenhuma aposta`);
+      const embeds = makeEmbed({
+        type: 'warn',
+        description: `${user.username} ainda não fez nenhuma aposta`
+      });
 
-      await interaction.editReply({ embeds: [embed] });
+      await interaction.editReply({ embeds });
       return;
     }
 
-    const headEmbed = new EmbedBuilder()
-      .setTitle(`Últimas ${userBets.length} apostas de ${user.username}`)
-      .setColor([245, 73, 53]);
-    //.setFooter({ text: 'Game beast' });
+    const embeds = userBets.map((bet: BetModel) => {
+      const beast = getBeastName(bet.id_beast);
+      const [date, time] = new Date(bet.created_at).toLocaleString().split(' ');
 
-    const embeds = userBets.map((bet) => {
-      return new EmbedBuilder()
-        .setTitle(`Game número ${bet.id_game}`)
-        .setColor([245, 73, 53])
-        .setDescription(
-          `Você apostou no número **${bet.id_beast} ${getBeastName(bet.id_beast)}**`
-        )
-        .addFields(
-          makeFieldInline('Pontos', bet.points),
-          makeFieldInline('Status', getStatus(bet.status))
-        )
-        .setTimestamp(new Date(bet.created_at));
+      const betGame = [
+        `---------------------------------------------`,
+        `| Game #${bet.id_game} - ${date}`,
+        `| ${user.username} apostou ${bet.points} pontos no ${beast} - ${bet.id_beast}`,
+        `| Status: ${getStatus(bet.status)}`
+      ];
+
+      return betGame.join('\n');
     });
 
-    await interaction.editReply({ embeds: [headEmbed, ...embeds] });
+    const headEmbed = makeEmbed({
+      type: 'success',
+      title: `Últimas ${userBets.length} apostas de ${user.username}`,
+      description: embeds
+    });
+
+    await interaction.editReply({ embeds: headEmbed });
   }
 }
 

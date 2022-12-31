@@ -1,6 +1,7 @@
 import api from '../services/api';
 import { Command, Interaction } from '../types/protocols/command';
 import { handleError } from '../utils';
+import { makeEmbed } from '../utils/makeEmbed';
 
 class Ping implements Command {
   name = 'ping';
@@ -13,7 +14,9 @@ class Ping implements Command {
     //   return;
     // }
 
-    await interaction.editReply(`ping`);
+    const embeds = makeEmbed({ type: 'log', description: 'pong' });
+
+    await interaction.editReply({ embeds });
   }
 }
 

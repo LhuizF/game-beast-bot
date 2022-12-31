@@ -1,44 +1,49 @@
 import { EmbedBuilder } from 'discord.js';
-import { clientBot } from '../server';
 
 const messageType = {
   error: {
     color: 0xff0000,
-    title: 'Error ❌'
+    message: 'Error ❌'
   },
   success: {
     color: 0x00ff00,
-    title: 'Success ✅'
+    message: 'Success ✅'
   },
   info: {
     color: 0x0000ff,
-    title: 'Info ℹ️'
+    message: 'Info ℹ️'
   },
   warn: {
     color: 0xffff00,
-    title: 'Warning ⚠️'
+    message: 'Warning ⚠️'
   },
   log: {
     color: 0x404040,
-    title: 'LOG 📝'
+    message: 'LOG 📝'
   }
 };
 
 type EmbedMessage = EmbedBuilder[];
 
 interface Message {
-  description: string;
-  showTime?: boolean;
-  footer?: boolean;
+  description?: string | string[];
+  time?: Date;
+  disableFooter?: boolean;
 }
 
 interface MessageWithType extends Message {
   type: keyof typeof messageType;
+  title?: string;
 }
 
 interface CustomMessage extends Message {
   color: number;
   title: string;
+}
+
+interface MessageConfig extends CustomMessage {
+  title: string;
+  footer?: string;
 }
 
 // Overload
@@ -48,35 +53,44 @@ export function makeEmbed(data: CustomMessage): EmbedMessage;
 export function makeEmbed(data: unknown): EmbedMessage {
   const messageConfig = getMessageConfig(data);
 
+  // const avatarURL =
+  //   clientBot.getClient()?.user?.avatarURL() ||
+  //   'https://cdn.discordapp.com/embed/avatars/0.png';
+
   const embed = new EmbedBuilder()
     .setColor(messageConfig.color)
     .setTitle(messageConfig.title)
-    .setDescription(messageConfig.description);
+    .setTimestamp(messageConfig.time);
 
-  if (messageConfig.showTime) embed.setTimestamp();
+  if (messageConfig.description || !!messageConfig.description?.length) {
+    const description = Array.isArray(messageConfig.description)
+      ? messageConfig.description.join('\n')
+      : messageConfig.description;
 
-  if (messageConfig.footer) {
-    const client = clientBot.getClient();
-    const avatarURL = client?.user?.avatarURL();
-    const username = client?.user?.username;
+    const descriptionTemplate = '```' + description + '```';
 
-    if (avatarURL && username) {
-      embed.setFooter({ text: username, iconURL: avatarURL });
-    }
+    embed.setDescription(descriptionTemplate);
+  }
+
+  if (messageConfig.footer && !messageConfig.disableFooter) {
+    embed.setFooter({ text: messageConfig.footer });
   }
 
   return [embed];
 }
 
-const getMessageConfig = (data: unknown): CustomMessage => {
+const getMessageConfig = (data: unknown): MessageConfig => {
   if ((data as MessageWithType).type in messageType) {
     const messageWithType = data as MessageWithType;
-    const { color, title } = messageType[messageWithType.type];
+    const { color, message } = messageType[messageWithType.type];
 
     // const message = { ...messageWithType } as any;
     // delete message.type;
 
-    return { color, title, ...messageWithType };
+    const title = messageWithType.title || message;
+    const footer = messageWithType.title ? message : '';
+
+    return { color, title, footer, ...messageWithType };
   } else {
     return data as CustomMessage;
   }

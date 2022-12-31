@@ -3,6 +3,7 @@ import { ptbr as translator } from '../langs';
 import { RequestError } from '../errors';
 import { Status } from '../types/types';
 import { Interaction } from '../types/protocols/command';
+import { makeEmbed } from './makeEmbed';
 
 export const makeFieldInline = (name: string, value: string | number, inline = true) => ({
   name,
@@ -12,9 +13,9 @@ export const makeFieldInline = (name: string, value: string | number, inline = t
 
 export const getStatus = (status: Status): string => {
   const statusType = {
-    pending: 'pendente',
-    win: 'ganhou',
-    lose: 'perdeu'
+    pending: 'pendente ⌛',
+    win: 'ganhou 🏆',
+    lose: 'perdeu ❌'
   };
 
   return statusType[status];
@@ -28,9 +29,9 @@ export const handleError = async (interaction: Interaction, error: RequestError)
 
   sendLog(interaction, text);
 
-  const embed = new EmbedBuilder().setTitle(message);
+  const embeds = makeEmbed({ type: 'error', description: message });
 
-  await interaction.editReply({ embeds: [embed] });
+  await interaction.editReply({ embeds });
 };
 
 export const time = {
