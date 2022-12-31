@@ -3,7 +3,7 @@ export interface GuildModel {
   name: string;
   icon: string;
   channel: string;
-  created_at: Date;
+  created_at: string;
 }
 
 export interface UserModel {
@@ -15,7 +15,7 @@ export interface UserModel {
   email?: string;
   password?: string;
   avatar: string;
-  created_at: Date;
+  created_at: string;
   roleId: string;
 }
 
@@ -33,7 +33,7 @@ export interface BetModel {
   platform: string;
   id_beast: number;
   id_user: string;
-  created_at: Date;
+  created_at: string;
 }
 
 export interface NewBet {
@@ -49,8 +49,8 @@ export interface GameModel {
   id: number;
   time: number;
   result: number;
-  created_at: Date;
-  update_at: Date;
+  created_at: string;
+  update_at: string;
 }
 
 export interface GameResult extends BetsResult {
