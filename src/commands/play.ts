@@ -3,6 +3,7 @@ import api from '../services/api';
 import { UserModel } from '../types/types';
 import { Command, Interaction } from '../types/protocols/command';
 import { handleError } from '../utils';
+import { makeEmbed } from '../utils/makeEmbed';
 
 class Play implements Command {
   name = 'jogar';
@@ -16,7 +17,7 @@ class Play implements Command {
       avatar: interaction.user.avatarURL()
     };
 
-    const user = await api.post<UserModel>('/singup', data);
+    const user = await api.post<UserModel>('/singup', { ...data });
 
     if (user instanceof Error) {
       await handleError(interaction, user);
@@ -33,16 +34,13 @@ class Play implements Command {
     if (!role || !guildMember) return;
     await guildMember.roles.add(role);
 
-    const embed = new EmbedBuilder({
-      title: `${user.name} começou a jogar!`
-    })
-      .setColor([245, 73, 53])
-      .setThumbnail(user.avatar)
-      .addFields({ name: 'Pontos iniciais', value: user.points.toString(), inline: true })
-      .setTimestamp()
-      .setFooter({ text: 'Game beast' });
+    const embeds = makeEmbed({
+      type: 'success',
+      title: `${interaction.user.username} começou a jogar!`,
+      description: `Pontos iniciais: ${user.points}`
+    });
 
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.editReply({ embeds });
   }
 }
 
