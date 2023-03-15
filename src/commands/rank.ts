@@ -56,26 +56,6 @@ class Rank implements Command {
       description: formatTable(description)
     });
 
-    // const rank = usersRank.map((user, index) => {
-    //   const position = `${index + 1}º`;
-
-    //   return new EmbedBuilder()
-    //     .setColor([245, 73, 53])
-    //     .addFields(
-    //       { name: 'Posição', value: position, inline: true },
-    //       { name: 'Nome', value: user.name, inline: true },
-    //       { name: 'pontos', value: user.points.toString(), inline: true }
-    //     )
-    //     .setThumbnail(user.avatar);
-    // });
-
-    // const embed = new EmbedBuilder()
-    //   .setTitle(`Top 5 jogadores ${isGlobal ? 'Global' : 'do Servidor'}`)
-    //   .setColor([245, 73, 53])
-    //   .setTimestamp();
-
-    // if (!isGlobal) embed.setDescription(`Server: **${interaction.guild?.name}**`);
-
     await interaction.editReply({ embeds: embed });
   }
 }

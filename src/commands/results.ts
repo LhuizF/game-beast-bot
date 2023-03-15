@@ -44,7 +44,6 @@ class Results implements Command {
     const headEmbed = new EmbedBuilder()
       .setTitle(`Últimos ${results.length} resultados`)
       .setColor([245, 73, 53]);
-    // .setFooter({ text: 'Game beast' });
 
     const embed = results.map((result) => {
       const totalPoints = result.winners.reduce(
