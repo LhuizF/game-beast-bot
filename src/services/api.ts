@@ -74,4 +74,4 @@ class Api {
   }
 }
 
-export default new Api({ withToken: true, isLocal: true });
+export default new Api({ withToken: true });

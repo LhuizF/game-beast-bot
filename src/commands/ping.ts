@@ -14,7 +14,12 @@ class Ping implements Command {
     //   return;
     // }
 
-    const embeds = makeEmbed({ color: 0x404040, title: 'Pong! 🥎', disableFooter: true });
+
+    const embeds = makeEmbed({
+      color: 0x404040,
+      title: 'Pong! 🥎',
+      disableFooter: true
+    });
 
     await interaction.editReply({ embeds });
   }
