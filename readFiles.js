@@ -19,7 +19,7 @@ function readFile(path, search, foundFiles) {
   if (file.includes(search)) {
     const lines = file.split('\n');
     const index = lines.findIndex((line) => line.includes(search)) + 1;
-    foundFiles.push({ path, index });
+    foundFiles.push({ path, line: index });
   }
 }
 
