@@ -15,7 +15,7 @@ class Api {
   private requestConfig(config: APIConfig) {
     const baseURL =
       config.isLocal || this.startConfig.isLocal ? localBaseUrl : prodBaseUrl;
-
+    console.log('baseURL', baseURL);
     const headers = {
       discord_token:
         config.withToken || this.startConfig.withToken
@@ -74,4 +74,4 @@ class Api {
   }
 }
 
-export default new Api({ withToken: true });
+export default new Api({ withToken: true, isLocal: true });

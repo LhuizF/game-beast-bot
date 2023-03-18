@@ -53,14 +53,9 @@ export function makeEmbed(data: CustomMessage): EmbedMessage;
 export function makeEmbed(data: unknown): EmbedMessage {
   const messageConfig = getMessageConfig(data);
 
-  // const avatarURL =
-  //   clientBot.getClient()?.user?.avatarURL() ||
-  //   'https://cdn.discordapp.com/embed/avatars/0.png';
-
   const embed = new EmbedBuilder()
     .setColor(messageConfig.color)
-    .setTitle(messageConfig.title)
-    .setTimestamp(messageConfig.time);
+    .setTitle(messageConfig.title);
 
   if (messageConfig.description || !!messageConfig.description?.length) {
     const description = Array.isArray(messageConfig.description)
@@ -72,7 +67,11 @@ export function makeEmbed(data: unknown): EmbedMessage {
     embed.setDescription(descriptionTemplate);
   }
 
-  if (messageConfig.footer && !messageConfig.disableFooter) {
+  if (!messageConfig.disableFooter) {
+    embed.setTimestamp(messageConfig.time);
+  }
+
+  if (messageConfig.footer) {
     embed.setFooter({ text: messageConfig.footer });
   }
 
@@ -83,9 +82,6 @@ const getMessageConfig = (data: unknown): MessageConfig => {
   if ((data as MessageWithType).type in messageType) {
     const messageWithType = data as MessageWithType;
     const { color, message } = messageType[messageWithType.type];
-
-    // const message = { ...messageWithType } as any;
-    // delete message.type;
 
     const title = messageWithType.title || message;
     const footer = messageWithType.title ? message : '';
