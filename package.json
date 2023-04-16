@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run edit:dev && nodemon --exec sucrase-node src/server.ts",
+    "dev": "nodemon --exec sucrase-node src/server.ts",
     "start": "node ./build/server.js",
     "build": "sucrase ./src -d ./build --transforms typescript,imports",
     "start:test": "npm run build && node ./build/server.js",
-    "readFile": "node ./readFiles.js",
-    "edit:prod": "node ./edit-env.js prod",
-    "edit:dev": "node ./edit-env.js dev",
+    "readFile": "node ./scripts/readFiles.js",
+    "edit:prod": "node ./scripts/edit-env.js prod",
+    "edit:dev": "node ./scripts/edit-env.js dev",
     "deploy": "npm run readFile && npm run build && npm run edit:prod && discloud commit build && npm run edit:dev"
   },
   "keywords": [],

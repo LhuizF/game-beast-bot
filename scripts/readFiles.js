@@ -35,6 +35,8 @@ function start() {
       console.log(foundFiles);
       const err = `Arquivos encontrados com: ${search}`;
       throw new Error(err);
+    } else{
+      console.log(`Nenhum arquivo encontrado com: ${search}`);
     }
   });
 }
